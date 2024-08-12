@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Account Overview</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('transfer') }}">Transfer Money</a>
+            <a href="{{ url_for('transferlist') }}">Transfer List</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Welcome, {{ user_account.username }}</h2>
+        <p>Account Number: {{ user_account.bank_id }}</p>
+        <p>Balance: {{ user_account.balance }}</p>
+        <!-- Add more details or functionality here -->
+    </main>
+    <footer>
+        <p>&copy; 2024 Banking App System</p>
+    </footer>
+</body>
+</html>

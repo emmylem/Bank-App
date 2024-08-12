@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Loan Management</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('transfer') }}">Transfer Money</a>
+            <a href="{{ url_for('transferlist') }}">Transfer List</a>
+            <a href="{{ url_for('account_overview') }}">Account Overview</a>
+            <a href="{{ url_for('credit_card') }}">Manage Credit Cards</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Manage Your Loans</h2>
+        <!-- Add form and functionality here for loan management -->
+        <form method="post">
+            <!-- Example form fields -->
+            <div>
+                <label for="loan_amount">Loan Amount:</label>
+                <input type="text" id="loan_amount" name="loan_amount" required>
+            </div>
+            <div>
+                <label for="loan_term">Loan Term:</label>
+                <input type="text" id="loan_term" name="loan_term" required>
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Banking App System</p>
+    </footer>
+</body>
+</html>

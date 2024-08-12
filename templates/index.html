@@ -2,16 +2,174 @@
 {% set active_page = "index" %}
 {% block content %}
   <!--==========================Intro Section============================-->
-  <section id="intro" class="clearfix">
-    <div class="container d-flex">
-      <div class="row justify-content-center align-self-center">
-        <div class="col-lg-12 col-md-6 intro-info text-center">
-          <h2 class="text-center"><span>Banking <br> App</span><br>System</h2>
-          <div>
-            <a href="{{url_for('transfer')}}" class="btn btn-info btn-lg">Transfer Money</a>
-          </div>
-        </div>    
-      </div>
+  <section id="intro" class="intro py-5 d-flex flex-column justify-content-center align-items-center bg-primary text-light">
+    <div class="container text-center">
+      <h1 class="display-4 mb-4">Welcome to the <span class="highlight">Banking App System</span></h1>
+      <p class="lead mb-4">Your gateway to secure, efficient, and seamless banking services.</p>
+      
+      {% if session.get('username') %}
+        <!-- User is logged in -->
+        <h3 class="mb-3">Hello, {{ session['username'] }}!</h3>
+        <div class="btn-group mb-4">
+          <a href="{{ url_for('transfer') }}" class="btn btn-success btn-lg mb-2">Transfer Money</a>
+          <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg">Logout</a>
+        </div>
+        <p><a href="{{ url_for('transferlist') }}" class="btn btn-info btn-lg">View Transfer List</a></p>
+        <!-- Additional Logged-In Features -->
+        <p><a href="{{ url_for('account_overview') }}" class="btn btn-warning btn-lg">Account Overview</a></p>
+        <p><a href="{{ url_for('credit_card') }}" class="btn btn-dark btn-lg">Credit Card Management</a></p>
+        <p><a href="{{ url_for('loan_management') }}" class="btn btn-secondary btn-lg">Loan Management</a></p>
+      {% else %}
+        <!-- User is not logged in -->
+        <p class="lead mb-4">Login or register to access our comprehensive banking services.</p>
+        <div class="btn-group mb-4">
+          <a href="{{ url_for('login') }}" class="btn btn-success btn-lg mb-2">Login</a>
+          <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg">Register</a>
+        </div>
+      {% endif %}
     </div>
   </section><!-- #intro -->
+
+  <!--==========================Features Section============================-->
+  <section id="features" class="features py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box p-4 bg-light shadow rounded">
+            <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+            <h4>Easy Transfers</h4>
+            <p>Transfer money quickly and securely between accounts.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box p-4 bg-light shadow rounded">
+            <i class="fas fa-lock fa-3x mb-3"></i>
+            <h4>Secure Transactions</h4>
+            <p>Ensure your financial data is protected with top-notch security.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box p-4 bg-light shadow rounded">
+            <i class="fas fa-headset fa-3x mb-3"></i>
+            <h4>24/7 Support</h4>
+            <p>Get assistance anytime with our dedicated support team.</p>
+          </div>
+        </div>
+        <!-- Additional Features -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box p-4 bg-light shadow rounded">
+            <i class="fas fa-file-alt fa-3x mb-3"></i>
+            <h4>Account Statements</h4>
+            <p>Access and download your account statements anytime.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box p-4 bg-light shadow rounded">
+            <i class="fas fa-bill fa-3x mb-3"></i>
+            <h4>Bill Payments</h4>
+            <p>Pay your utility bills and manage recurring payments easily.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box p-4 bg-light shadow rounded">
+            <i class="fas fa-chart-line fa-3x mb-3"></i>
+            <h4>Personal Finance Management</h4>
+            <p>Track your spending and set budgeting goals with our tools.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- #features -->
+
+  <!--==========================Testimonials Section============================-->
+  <section id="testimonials" class="testimonials py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">What Our Users Are Saying</h2>
+      <div class="row text-center">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="testimonial-box p-4 bg-white shadow rounded">
+            <p>"This app don make my life easy. I fit manage my money well well now. I go recommend am to my family and friends!"</p>
+            <h5>Chinonso O.</h5>
+            <p>Accountant</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="testimonial-box p-4 bg-white shadow rounded">
+            <p>"I dey enjoy the user-friendly design and the security wey this app dey provide. I trust am well for my transactions."</p>
+            <h5>Emeka I.</h5>
+            <p>Small Business Owner</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="testimonial-box p-4 bg-white shadow rounded">
+            <p>"The customer service na top notch. E dey make my banking experience smooth and reliable. I dey recommend am."</p>
+            <h5>Folake A.</h5>
+            <p>Entrepreneur</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- #testimonials -->
+
+  <!--==========================Contact Section============================-->
+  <section id="contact" class="contact py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Contact Us</h2>
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea class="form-control" id="message" rows="4" placeholder="Your Message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+  </section><!-- #contact -->
+
+  <!--==========================FAQs Section============================-->
+  <section id="faqs" class="faqs py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+      <div class="accordion" id="faqAccordion">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                What should I do if I forget my password?
+              </button>
+            </h5>
+          </div>
+          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#faqAccordion">
+            <div class="card-body">
+              You can reset your password by clicking on the "Forgot Password" link on the login page.
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                How can I contact customer support?
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+            <div class="card-body">
+              You can contact our customer support team via the "Contact Us" form on our website or by calling our support number.
+            </div>
+          </div>
+        </div>
+        <!-- Add more FAQs here -->
+      </div>
+    </div>
+  </section><!-- #faqs -->
 {% endblock %}

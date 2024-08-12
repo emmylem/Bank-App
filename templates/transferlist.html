@@ -1,38 +1,277 @@
 {% extends 'base.html' %}
 {% set active_page = "transferlist" %}
 {% block content %}
-  <!--==========================Table Section============================-->
-<section id="transfer-list">
-  <div class="container table-responsive py-5">
+<section id="transfer-list" class="py-5">
+  <div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h1 class="heading mb-0">
+            <i class="fa fa-list-alt"></i> Transfer Balance List
+          </h1>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-dark mx-2" id="toggle-dark-mode"><i class="fa fa-moon"></i> Dark Mode</button>
+            <div class="search-bar mx-2">
+              <input type="text" id="search-input" class="form-control" placeholder="Search..." aria-label="Search">
+              <button class="btn btn-primary" id="search-button"><i class="fa fa-search"></i></button>
+            </div>
+            <button class="btn btn-success mx-2" id="refresh-button"><i class="fa fa-sync-alt"></i> Refresh</button>
+            <button class="btn btn-info mx-2" id="export-pdf"><i class="fa fa-file-pdf"></i> Export as PDF</button>
+            <button class="btn btn-info mx-2" id="export-excel"><i class="fa fa-file-excel"></i> Export as Excel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Filter Options -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <form id="filter-form" class="d-flex justify-content-between align-items-center">
+          <div class="form-group">
+            <label for="date-range">Date Range:</label>
+            <input type="text" id="date-range" class="form-control" placeholder="Select Date Range">
+          </div>
+          <div class="form-group">
+            <label for="balance-range">Balance Range:</label>
+            <input type="text" id="balance-range" class="form-control" placeholder="Select Balance Range">
+          </div>
+          <button class="btn btn-info" id="apply-filters"><i class="fa fa-filter"></i> Apply Filters</button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Data Table -->
     <div class="row">
       <div class="col-md-12">
-        <h1 class="heading text-center">Transfer Balance List</h1>
-      </div>
-      <div class="box col-md-12">
-        <table class="table table-bordered table-striped" >
-            <thead>
+        <div class="box">
+          <table id="transfer-table" class="table table-bordered table-striped table-hover">
+            <thead class="thead-dark">
               <tr>
-                <th>Sr.No</th>
-                <th>Name</th>
-                <th>Account No</th>
-                <th>Balance</th>
+                <th><i class="fa fa-hashtag"></i> Sr.No</th>
+                <th><i class="fa fa-user"></i> Name</th>
+                <th><i class="fa fa-credit-card"></i> Account No</th>
+                <th><i class="fa fa-money-bill-wave"></i> Balance</th>
+                <th><i class="fa fa-info-circle"></i> Details</th>
               </tr>
             </thead>
             <tbody>
-              {% for i in order_list %}
-              <tr>
-                <td scope="row">{{ i.id }}</th>
-                <td class="p-3">{{ i.username }}</td>
-                <td class="p-3">{{ i.bank_id }}</td>
-                <td class="p-3">{{ i.balance }}</td>
-              </tr>
-              {% endfor %}
+              {% if order_list %}
+                {% for i in order_list %}
+                  <tr>
+                    <td scope="row">{{ loop.index }}</td>
+                    <td>{{ i.username }}</td>
+                    <td>{{ i.bank_id }}</td>
+                    <td>
+                      <span class="badge badge-success">${{ i.balance }}</span>
+                      <div class="progress mt-2">
+                        <div class="progress-bar" role="progressbar" style="width: {{ i.balance }}%;" aria-valuenow="{{ i.balance }}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </td>
+                    <td><button class="btn btn-info btn-sm view-details" data-id="{{ i.id }}" data-toggle="modal" data-target="#details-modal"><i class="fa fa-eye"></i> View</button></td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="5" class="text-center py-4">
+                    <i class="fa fa-exclamation-circle"></i> No transfers available
+                  </td>
+                </tr>
+              {% endif %}
             </tbody>
           </table>
+
+          <!-- Pagination -->
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4" id="pagination-controls">
+              <!-- Pagination controls will be dynamically generated -->
+            </ul>
+          </nav>
         </div>
       </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="text-center py-3">
+      <p class="mb-0">&copy; {{ current_year }} Emmylabs. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <!-- Details Modal -->
+  <div class="modal fade" id="details-modal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailsModalLabel">Transfer Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Details will be loaded here via AJAX -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-{% endblock %}
+<!-- Add Font Awesome CDN for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Add DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.2/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+
+<!-- Custom CSS and JS -->
+<style>
+  .search-bar input {
+    border-radius: 0;
+    border: 1px solid #ced4da;
+  }
   
+  .search-bar button {
+    border-radius: 0;
+    margin-left: -1px;
+  }
+
+  .table thead th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .table tbody tr:hover {
+    background-color: #e9ecef;
+  }
+
+  .badge-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .progress-bar {
+    background-color: #007bff;
+  }
+
+  footer {
+    background-color: #f1f1f1;
+    border-top: 1px solid #e1e1e1;
+  }
+
+  .dark-mode {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .dark-mode .table thead th {
+    background-color: #444;
+  }
+
+  .dark-mode .table tbody tr:nth-child(even) {
+    background-color: #555;
+  }
+
+  .dark-mode .table tbody tr:hover {
+    background-color: #666;
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    // Initialize DataTable
+    const table = $('#transfer-table').DataTable({
+      "paging": true,
+      "searching": true,
+      "ordering": true,
+      "info": false,
+      "lengthChange": false,
+      "pageLength": 10
+    });
+    
+    // Search functionality
+    $('#search-button').click(function() {
+      table.search($('#search-input').val()).draw();
+    });
+    
+    $('#search-input').on('keyup', function() {
+      table.search($(this).val()).draw();
+    });
+    
+    // Dark mode toggle
+    $('#toggle-dark-mode').click(function() {
+      $('body').toggleClass('dark-mode');
+    });
+    
+    // Date range picker
+    $('#date-range').daterangepicker({
+      locale: { format: 'YYYY-MM-DD' }
+    });
+    
+    // Example of dynamic data refresh with AJAX
+    $('#refresh-button').click(function() {
+      $.ajax({
+        url: '/api/get-transfers',
+        method: 'GET',
+        success: function(data) {
+          table.clear().rows.add(data).draw();
+        }
+      });
+    });
+    
+    // Example of export functionality
+    $('#export-pdf').click(function() {
+      table.button('.buttons-pdf').trigger();
+    });
+    
+    $('#export-excel').click(function() {
+      table.button('.buttons-excel').trigger();
+    });
+    
+    // Initialize DataTable buttons
+    new $.fn.dataTable.Buttons(table, {
+      buttons: [
+        {
+          extend: 'pdf',
+          text: 'Export PDF',
+          className: 'btn btn-info'
+        },
+        {
+          extend: 'excel',
+          text: 'Export Excel',
+          className: 'btn btn-info'
+        }
+      ]
+    }).container().appendTo($('#export-buttons'));
+    
+    // Load detailed view via AJAX
+    $('#transfer-table').on('click', '.view-details', function() {
+      const id = $(this).data('id');
+      $.ajax({
+        url: `/api/get-transfer-details/${id}`,
+        method: 'GET',
+        success: function(data) {
+          $('#details-modal .modal-body').html(`
+            <p><strong>Name:</strong> ${data.username}</p>
+            <p><strong>Account No:</strong> ${data.bank_id}</p>
+            <p><strong>Balance:</strong> $${data.balance}</p>
+            <p><strong>Date:</strong> ${data.date}</p>
+          `);
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}

@@ -43,15 +43,22 @@ class User_Transfer_List(db.Model):
         return f"{self.id} | {self.username} | {self.bank_id} | {self.balance}"
 
 def create_one_time_entry():
-    # Adding multiple users to the database for testing
-    user1 = User_Transfer_List(username="reey", bank_id=12345, balance=1000.00)
-    user2 = User_Transfer_List(username="alex", bank_id=67890, balance=1500.00)
-    user3 = User_Transfer_List(username="jane", bank_id=54321, balance=2000.00)
-    user4 = User_Transfer_List(username="john", bank_id=98765, balance=2500.00)
-    user5 = User_Transfer_List(username="ben", bank_id=11111, balance=3000.00)
-    
-    db.session.add_all([user1, user2, user3, user4, user5])
-    db.session.commit()
+    # Check if the table is empty before adding the entries
+    if User_Transfer_List.query.count() == 0:
+        users = [
+            {"username": "reey", "bank_id": 12345, "balance": 1000.00},
+            {"username": "alex", "bank_id": 67890, "balance": 1500.00},
+            {"username": "jane", "bank_id": 54321, "balance": 2000.00},
+            {"username": "john", "bank_id": 98765, "balance": 2500.00},
+            {"username": "ben", "bank_id": 11111, "balance": 3000.00}
+        ]
+        
+        for user in users:
+            if not User_Transfer_List.query.filter_by(username=user['username']).first():
+                new_user = User_Transfer_List(username=user['username'], bank_id=user['bank_id'], balance=user['balance'])
+                db.session.add(new_user)
+        
+        db.session.commit()
 
 # Authentication decorator
 def login_required(f):
@@ -77,7 +84,6 @@ def transferlist():
     order_list = User_Transfer_List.query.order_by(User_Transfer_List.id).all()
     return render_template('transferlist.html', order_list=order_list)
 
-# Route to handle money transfers
 @app.route('/transfer', methods=['GET', 'POST'])
 @login_required
 def transfer():
@@ -101,8 +107,8 @@ def transfer():
             flash(f"Receiver '{receiver_name}' not found. Please check the name and try again.")
             return redirect(request.url)
 
-        # Check if the receiver's bank_id matches the provided account_no
-        if receiver.bank_id == account_no:
+        # Check if the sender's bank_id matches the provided account_no
+        if sender.bank_id == account_no:
             sender.balance -= amount
             receiver.balance += amount
 
@@ -192,5 +198,5 @@ def loan_management():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create the database tables
-        create_one_time_entry()  # Add initial data
+        create_one_time_entry()  # Add initial data if the table is empty
     app.run(debug=True)

@@ -197,6 +197,23 @@ def loan_management():
     # For example, display a form for managing loans
     return render_template('loan_management.html')
 
+@app.route('/add_sample_transfer')
+def add_sample_transfer():
+    new_transfer = UserTransferList(name="Test User", account_no="123456789", balance=100.0, details="Test transfer")
+    db.session.add(new_transfer)
+    db.session.commit()
+    
+    return "Sample transfer added"
+
+@app.route('/debug/transferlist')
+def debug_transferlist():
+    # Fetch all transfer entries
+    order_list = UserTransferList.query.all()
+    
+    # Return the data for debugging purposes
+    return str(order_list) if order_list else "No transfer records found"
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create the database tables

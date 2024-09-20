@@ -8,8 +8,9 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = 'vidhis'  # Ensure this is set to a secure random key in production
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///database.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://bankapp_user:CcDlVWTXWrRS7r9Pe0ybiP28D6LuGdTu@dpg-crmiru5umphs739f5st0-a/bankapp')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # Database model for User

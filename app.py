@@ -92,7 +92,7 @@ def transferlist():
             {"username": "alex", "bank_id": 67890, "balance": 1500.00},
             {"username": "jane", "bank_id": 54321, "balance": 2000.00},
             {"username": "john", "bank_id": 98765, "balance": 2500.00},
-            {"username": "ben", bank_id=11111, "balance": 3000.00},
+            {"username": "ben", "bank_id":11111, "balance": 3000.00},
         ]
         
         for transfer in sample_transfers:

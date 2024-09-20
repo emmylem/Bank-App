@@ -83,6 +83,7 @@ def index():
 @login_required
 def transferlist():
     order_list = User_Transfer_List.query.order_by(User_Transfer_List.id).all()
+    print('Order List:', order_list)
     return render_template('transferlist.html', order_list=order_list)
 
 @app.route('/transfer', methods=['GET', 'POST'])

@@ -82,8 +82,8 @@ def index():
 @app.route('/transferlist', methods=['GET'])
 @login_required
 def transferlist():
-    # Query the UserTransferList table
-    order_list = UserTransferList.query.order_by(UserTransferList.id).all()
+    # Query the User_Transfer_List table
+    order_list = User_Transfer_List.query.order_by(User_Transfer_List.id).all()
 
     # If the table is empty, insert sample records
     if not order_list:
@@ -92,11 +92,11 @@ def transferlist():
             {"username": "alex", "bank_id": 67890, "balance": 1500.00},
             {"username": "jane", "bank_id": 54321, "balance": 2000.00},
             {"username": "john", "bank_id": 98765, "balance": 2500.00},
-            {"username": "ben", "bank_id":11111, "balance": 3000.00},
+            {"username": "ben", "bank_id": 11111, "balance": 3000.00},
         ]
         
         for transfer in sample_transfers:
-            new_transfer = UserTransferList(
+            new_transfer = User_Transfer_List(
                 username=transfer["username"],
                 bank_id=transfer["bank_id"],
                 balance=transfer["balance"]
@@ -105,13 +105,12 @@ def transferlist():
         
         db.session.commit()
         # Query again to include the newly added sample records
-        order_list = UserTransferList.query.order_by(UserTransferList.id).all()
+        order_list = User_Transfer_List.query.order_by(User_Transfer_List.id).all()
 
     # Log the results for debugging
     app.logger.info(f"Order List: {order_list}")
     
     return render_template('transferlist.html', order_list=order_list)
-
 
 @app.route('/transfer', methods=['GET', 'POST'])
 @login_required
@@ -213,7 +212,6 @@ def account_overview():
 @login_required
 def credit_card():
     # Add logic here to handle credit card information
-    # For example, display a form to add or update credit card details
     return render_template('credit_card.html')
 
 # Route for loan management
@@ -221,12 +219,11 @@ def credit_card():
 @login_required
 def loan_management():
     # Add logic here to handle loan management functionality
-    # For example, display a form for managing loans
     return render_template('loan_management.html')
 
 @app.route('/add_sample_transfer')
 def add_sample_transfer():
-    new_transfer = UserTransferList(name="Test User", account_no="123456789", balance=100.0, details="Test transfer")
+    new_transfer = User_Transfer_List(username="Test User", bank_id=123456789, balance=100.0)
     db.session.add(new_transfer)
     db.session.commit()
     
@@ -235,11 +232,10 @@ def add_sample_transfer():
 @app.route('/debug/transferlist')
 def debug_transferlist():
     # Fetch all transfer entries
-    order_list = UserTransferList.query.all()
+    order_list = User_Transfer_List.query.all()
     
     # Return the data for debugging purposes
     return str(order_list) if order_list else "No transfer records found"
-
 
 if __name__ == "__main__":
     with app.app_context():

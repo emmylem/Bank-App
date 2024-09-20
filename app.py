@@ -79,12 +79,39 @@ def index():
     return render_template('index.html', username=username)
 
 # Route to display the transfer list
-@app.route('/transferlist', methods=['GET', 'POST'])
+@app.route('/transferlist', methods=['GET'])
 @login_required
 def transferlist():
-    order_list = User_Transfer_List.query.order_by(User_Transfer_List.id).all()
-    print('Order List:', order_list)
+    # Query the UserTransferList table
+    order_list = UserTransferList.query.order_by(UserTransferList.id).all()
+
+    # If the table is empty, insert sample records
+    if not order_list:
+        sample_transfers = [
+            {"username": "reey", "bank_id": 12345, "balance": 1000.00},
+            {"username": "alex", "bank_id": 67890, "balance": 1500.00},
+            {"username": "jane", "bank_id": 54321, "balance": 2000.00},
+            {"username": "john", "bank_id": 98765, "balance": 2500.00},
+            {"username": "ben", bank_id=11111, "balance": 3000.00},
+        ]
+        
+        for transfer in sample_transfers:
+            new_transfer = UserTransferList(
+                username=transfer["username"],
+                bank_id=transfer["bank_id"],
+                balance=transfer["balance"]
+            )
+            db.session.add(new_transfer)
+        
+        db.session.commit()
+        # Query again to include the newly added sample records
+        order_list = UserTransferList.query.order_by(UserTransferList.id).all()
+
+    # Log the results for debugging
+    app.logger.info(f"Order List: {order_list}")
+    
     return render_template('transferlist.html', order_list=order_list)
+
 
 @app.route('/transfer', methods=['GET', 'POST'])
 @login_required

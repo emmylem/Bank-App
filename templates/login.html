@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
+    <!-- Link to FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -40,19 +42,32 @@
             flex-direction: column;
         }
 
-        label {
-            margin-bottom: 8px;
-            text-align: left;
-            font-weight: bold;
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        input[type="text"], input[type="password"] {
-            padding: 10px;
-            margin-bottom: 20px;
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .form-group input {
+            padding: 10px 10px 10px 40px; /* Add space for icon */
+            width: 100%;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
-            width: 100%;
+        }
+
+        .form-group i {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #007bff;
         }
 
         button {
@@ -81,11 +96,6 @@
         a:hover {
             text-decoration: underline;
         }
-
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
     </style>
 </head>
 <body>
@@ -94,13 +104,15 @@
         <form method="POST">
             <div class="form-group">
                 <label for="username">Username</label>
+                <i class="fas fa-user"></i> <!-- FontAwesome user icon -->
                 <input type="text" name="username" id="username" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
+                <i class="fas fa-lock"></i> <!-- FontAwesome lock icon -->
                 <input type="password" name="password" id="password" required>
             </div>
-            <button type="submit">Register</button>
+            <button type="submit">Login</button>
         </form>
         <a href="/register">Don't have an account? Register here.</a>
     </div>
